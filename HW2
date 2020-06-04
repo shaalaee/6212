@@ -1,0 +1,54 @@
+from random import randint
+import numpy as np
+import time
+
+
+def partition(a, left, right, p):  # https://en.wikipedia.org/wiki/Quicksort#Lomuto_partition_scheme
+    pivot = a[p]
+    swap(a, p, right)
+    p = left
+
+    for i in range(left, right):
+        if a[i] <= pivot:
+            swap(a, i, p)
+            p = p + 1
+    swap(a, p, right)
+    return p
+
+
+def quick_select(a, left, right, k):
+    if left == right:  # return if list only has 1 element
+        return a[left]
+
+    p = randint(left, right)
+    p = partition(a, left, right, p)
+
+    if k == p:
+        return a[k]
+
+    elif k < p:
+        return quick_select(a, left, p - 1, k)
+
+    else:
+        return quick_select(a, p + 1, right, k)
+
+
+def swap(a, i, j):
+    temp = a[i]
+    a[i] = a[j]
+    a[j] = temp
+
+
+for _ in range(10):  # iterate through function x times
+    a = np.random.randint(1, 10, 10)  # generate random array of integers
+    k = 5  # assign k
+
+    start_time = time.time()  # start timer
+    output = quick_select(a, 0, len(a) - 1, k)  # call quick select function
+    end_time = time.time()  # end timer
+    time_delta = int((end_time - start_time) * 1000000000)  # measure time delta and convert to nanoseconds
+
+    print("Array: " + str(a))
+    print("Running Time in ns: " + str(time_delta))
+    print(str(k) + "th " + "smallest element is: " + str(output))
+    print("-----------------------------")
